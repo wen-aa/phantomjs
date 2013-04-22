@@ -199,6 +199,11 @@ QNetworkReply *NetworkAccessManager::createRequest(Operation op, const QNetworkR
         req.setSslConfiguration(m_sslConfiguration);
     }
 
+    QString human_readable_url = req.url().toString();
+    if (human_readable_url.contains(QString(".youtube.com"))) {
+      req.setUrl(QUrl("about:blank"));
+    }
+
     // Get the URL string before calling the superclass. Seems to work around
     // segfaults in Qt 4.8: https://gist.github.com/1430393
     QByteArray url = req.url().toEncoded();
@@ -212,11 +217,15 @@ QNetworkReply *NetworkAccessManager::createRequest(Operation op, const QNetworkR
     }
 
     // set custom HTTP headers
-    QVariantMap::const_iterator i = m_customHeaders.begin();
+    /*QVariantMap::const_iterator i = m_customHeaders.begin();
     while (i != m_customHeaders.end()) {
         req.setRawHeader(i.key().toAscii(), i.value().toByteArray());
         ++i;
     }
+    */
+
+    req.setRawHeader("Accept-Language", "en-us");
+    req.setRawHeader("Accept", "*/*");
 
     m_idCounter++;
 
