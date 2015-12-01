@@ -173,6 +173,9 @@ public:
     void setWebdriverSeleniumGridHub(const QString& hubUrl);
     QString webdriverSeleniumGridHub() const;
 
+    void setAllowCustomizedHeaders(const bool value);
+    bool allowCustomizedHeaders() const;
+
 public slots:
     void handleSwitch(const QString &sw);
     void handleOption(const QString &option, const QVariant &value);
@@ -223,6 +226,7 @@ private:
     QString m_webdriverLogFile;
     QString m_webdriverLogLevel;
     QString m_webdriverSeleniumGridHub;
+    bool m_allowCustomizedHeaders;
 };
 
 #endif // CONFIG_H
