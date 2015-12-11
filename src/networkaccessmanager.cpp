@@ -107,6 +107,7 @@ NetworkAccessManager::NetworkAccessManager(QObject *parent, const Config *config
     , m_networkDiskCache(0)
     , m_sslConfiguration(QSslConfiguration::defaultConfiguration())
     , m_resourceTimeout(0)
+    , m_allowCustomizedHeaders(config->allowCustomizedHeaders())
 {
     setCookieJar(CookieJar::instance());
 
@@ -218,15 +219,16 @@ QNetworkReply *NetworkAccessManager::createRequest(Operation op, const QNetworkR
     }
 
     // set custom HTTP headers
-    /*QVariantMap::const_iterator i = m_customHeaders.begin();
-    while (i != m_customHeaders.end()) {
-        req.setRawHeader(i.key().toAscii(), i.value().toByteArray());
-        ++i;
+    if (m_allowCustomizedHeaders) {
+        QVariantMap::const_iterator i = m_customHeaders.begin();
+        while (i != m_customHeaders.end()) {
+            req.setRawHeader(i.key().toAscii(), i.value().toByteArray());
+            ++i;
+        }
+    } else {
+        req.setRawHeader("Accept-Language", "en-us");
+        req.setRawHeader("Accept", "*/*");
     }
-    */
-
-    req.setRawHeader("Accept-Language", "en-us");
-    req.setRawHeader("Accept", "*/*");
 
     m_idCounter++;
 
